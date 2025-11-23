@@ -1,8 +1,10 @@
 import express from "express";
 import { ENV } from "./src/helpers/env.js";
-import { connectDB } from "./src/helpers/db.js";
+
 import cookieParser from "cookie-parser";
 import userRoute from "./src/routes/user.route.js";
+import courseRoute from "./src/routes/course.route.js";
+import { connectDB } from "./src/config/db.js";
 
 
 const app = express()
@@ -15,6 +17,7 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.use('/api', userRoute)
+app.use('/api/course', courseRoute)
 
 app.listen(ENV.PORT,()=>{
     connectDB()

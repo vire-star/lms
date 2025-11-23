@@ -9,7 +9,7 @@ export const protectRoute = async (req, res, next) => {
 			return res.status(401).json({ message: "Unauthorized - No access token provided" });
 		}
 
-		// console.log(accessToken)
+		
 		
 		try {
 			const decoded = jwt.verify(accessToken, ENV.TOKEN_SECRET);
@@ -32,5 +32,14 @@ export const protectRoute = async (req, res, next) => {
 	} catch (error) {
 		console.log("Error in protectRoute middleware", error.message);
 		return res.status(401).json({ message: "Unauthorized - Invalid access token" });
+	}
+};
+
+
+export const adminRoute = (req, res, next) => {
+	if (req.user && req.user.email === ENV.ADMIN) {
+		next();
+	} else {
+		return res.status(403).json({ message: "Access denied - Admin only" });
 	}
 };
