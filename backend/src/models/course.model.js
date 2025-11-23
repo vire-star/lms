@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const courseSchema = new mongoose.Schema({
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
    title:{
     type:String,
     required:true
@@ -9,10 +13,12 @@ const courseSchema = new mongoose.Schema({
     type:String,
     required:true
    },
-   
+   thumbnail:{
+    type:String,
+   },
    modules:[
     {
-        moduleId:mongoose.Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Module"
     }
    ]
