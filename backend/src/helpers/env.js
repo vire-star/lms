@@ -5,5 +5,7 @@ configDotenv({quiet:true})
 
 export const ENV={
     MONG_URI:process.env.MONG_URI,
-    PORT :process.env.PORT
+    PORT :process.env.PORT,
+    ADMIN :process.env.ADMIN,
+    TOKEN_SECRET:process.env.TOKEN_SECRET
 }

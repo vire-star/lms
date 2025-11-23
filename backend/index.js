@@ -1,10 +1,20 @@
 import express from "express";
 import { ENV } from "./src/helpers/env.js";
 import { connectDB } from "./src/helpers/db.js";
+import cookieParser from "cookie-parser";
+import userRoute from "./src/routes/user.route.js";
 
 
 const app = express()
 
+
+app.use(express.json())
+app.use(cookieParser())
+app.use(express.urlencoded({extended:true}))
+
+
+
+app.use('/api', userRoute)
 
 app.listen(ENV.PORT,()=>{
     connectDB()
