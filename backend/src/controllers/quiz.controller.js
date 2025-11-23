@@ -1,3 +1,4 @@
+import { Module } from "../models/modules.model.js";
 import { Quiz } from "../models/quiz.model.js";
 
 export const createQuiz = async(req ,res)=>{
@@ -13,6 +14,9 @@ export const createQuiz = async(req ,res)=>{
         const quiz = await Quiz.create({
             moduleId
 
+        })
+        await Module.findByIdAndUpdate(moduleId,{
+            $push:{moduleId:quiz._id}
         })
         return res.status(201).json({
             message:"Quiz created successfully",
