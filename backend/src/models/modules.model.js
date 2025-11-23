@@ -9,6 +9,11 @@ const moduleSchema = new mongoose.Schema({
         require:true,
         type:String
     },
+    title:{
+        type:String,
+        required:true
+    },
+
     quizzes:[
         { 
             type: mongoose.Schema.Types.ObjectId,

@@ -88,7 +88,7 @@ export const getSingleCourse = async(req,res)=>{
         
         const courseId = req.params.id
 
-        const course = await Course.findById(courseId)
+        const course = await Course.findById(courseId).populate("modules")
 
         if(!course){
             return res.status(401).json({
