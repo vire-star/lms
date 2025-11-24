@@ -55,7 +55,7 @@ export const getSingleCourseModule = async(req,res)=>{
         })
     }
 
-    const singleModule = await Module.findById(moduleId).populate("quizzes")
+    const singleModule = await Module.findById(moduleId)
 
     if(!singleModule){
         return res.status(401).json({
