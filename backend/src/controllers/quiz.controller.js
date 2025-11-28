@@ -12,11 +12,12 @@ export const createQuiz = async(req ,res)=>{
         }
 
         const quiz = await Quiz.create({
-            moduleId
+            moduleId,
+            
 
         })
         await Module.findByIdAndUpdate(moduleId,{
-            $push:{moduleId:quiz._id}
+            $push:{quizzes:quiz._id}
         })
         return res.status(201).json({
             message:"Quiz created successfully",
@@ -28,7 +29,7 @@ export const createQuiz = async(req ,res)=>{
     }
 }
 
-
+// kjl
 export const getQuiz = async (req, res) => {
   try {
     const moduleId = req.params.id;

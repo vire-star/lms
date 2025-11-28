@@ -3,10 +3,10 @@ import { protectRoute } from "../middleware/auth.middleware.js";
 import { createQuiz, getQuiz } from "../controllers/quiz.controller.js";
 
 
-const quizRoute = express.Router()
+const quizRouter=express.Router()
 
 
-quizRoute.post("/createQuiz", protectRoute, createQuiz)
-quizRoute.get("/getSingleModuleQuiz/:id", protectRoute, getQuiz)
+quizRouter.post('/createQuiz', protectRoute, createQuiz)
+quizRouter.get('/getQuiz/:id', protectRoute, getQuiz)
 
-export default quizRoute
+export default quizRouter

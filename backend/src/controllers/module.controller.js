@@ -51,11 +51,11 @@ export const getSingleCourseModule = async(req,res)=>{
      const moduleId = req.params.id;
     if(!moduleId){
         return res.status(401).json({
-            message:"Course not found"
+            message:"Please provide Module Id "
         })
     }
 
-    const singleModule = await Module.findById(moduleId)
+    const singleModule = await Module.findById(moduleId).populate('quizzes')
 
     if(!singleModule){
         return res.status(401).json({
@@ -68,3 +68,4 @@ export const getSingleCourseModule = async(req,res)=>{
     console.log(`error from get single course module ,${error}`)
    }
 }
+
