@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const questionSchema = new mongoose.Schema({
     quizId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Quiz"
+        ref:"Quiz",
+        required:true
     },
 
     content:{
@@ -14,19 +15,19 @@ const questionSchema = new mongoose.Schema({
     options:[
         {
             type:String,
-            required:true
+            // required:true
         }
     ],
 
     correctOption:{
         type:String,
-        required:true
+        // required:true
     },
 
 
     explanation:{
         type:String,
-        required:true
+        // required:true
     }
 
 

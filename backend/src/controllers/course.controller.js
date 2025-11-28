@@ -1,5 +1,5 @@
 import cloudinary from "../helpers/cloudinary.js";
-import { redis } from "../helpers/redis.js";
+
 import { Course } from "../models/course.model.js";
 import { User } from "../models/user.model.js";
 
@@ -49,27 +49,15 @@ export const creatCourse = async(req ,res)=>{
 
 export const getCourse = async (req, res) => {
   try {
-    let allcourse = await redis.get("allCourse");
+   
 
      
 
-    if (allcourse) {
-      // Agar Upstash ne already object return kiya (auto-deserialize), to parse ki zarurat nahi
-      if (typeof allcourse === "object") {
-        return res.status(200).json({ fromCache: true, allcourse: allcourse });
-      }
-
-      // Agar string hai, tabhi JSON.parse karo
-      if (typeof allcourse === "string") {
-        const allcourse = JSON.parse(allcourse);
-        return res.status(200).json({ fromCache: true, allcourse });
-      }
-    }
-
+   
     const courses = await Course.find({}).lean();
 
-    if (!courses || courses.length === 0) {
-      return res.status(404).json({ message: "No allcourse found" });
+    if (!courses ) {
+      return res.status(401).json({ message: "No course found" });
     }
 
     // 3) Redis me seedha object store karo (Upstash khud stringify karega)
