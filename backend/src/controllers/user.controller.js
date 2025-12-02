@@ -30,14 +30,14 @@ export const register =async(req ,res)=>{
         const token = await jwt.sign({userId : newUser._id},ENV.TOKEN_SECRET)
 
         if(newUser.email===ENV.ADMIN){
-           return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }).json({
+           return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: "none",  }).json({
             message: `Welcome back admin ${newUser.fullName}`,
             admin:true,
             
             success: true
         })
         }
-        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }).json({
+        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: "none",  }).json({
             message: `Welcome  ${newUser.fullName}`,
             
             success: true
