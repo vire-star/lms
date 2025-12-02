@@ -1,4 +1,4 @@
-import { useId } from "react";
+
 import cloudinary from "../helpers/cloudinary.js";
 
 import { Course } from "../models/course.model.js";
