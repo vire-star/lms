@@ -11,7 +11,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 export const getQuestion = async(req , res)=>{
     try {
 
-        const {quizId} = req.body
+        const quizId = req.params.id
         const getQuestionFromQuiz=await Quiz.findById(quizId).populate('questions')
 
         const title = getQuestionFromQuiz
@@ -130,6 +130,23 @@ export const createQuestion = async (req, res) => {
     if (!moduleId || !content || !quizId) {
       return res.status(400).json({
         message: "Please provide all the details",
+      });
+    }
+
+  const quiz = await Quiz.findById(quizId);
+    
+    if (!quiz) {
+      return res.status(404).json({
+        message: "Quiz not found"
+      });
+    }
+
+    // ✅ Check if questions already generated
+    if (quiz.questions && quiz.questions.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Questions already generated for this quiz. Create a new quiz to generate more questions.",
+        existingQuestionsCount: quiz.questions.length
       });
     }
 

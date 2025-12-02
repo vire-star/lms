@@ -6,9 +6,9 @@ const commentSchema = new mongoose.Schema({
         ref:"User"
     },
 
-    courseId:{
+    ModuleId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Course"
+        ref:"Module"
     },
     comment:{
         type:String,

@@ -16,6 +16,10 @@ const courseSchema = new mongoose.Schema({
    thumbnail:{
     type:String,
    },
+   amount:{
+    type:Number,
+    required:true
+   },
    modules:[
     {
         type:mongoose.Schema.Types.ObjectId,

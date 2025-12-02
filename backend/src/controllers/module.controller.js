@@ -2,6 +2,7 @@
 import { Course } from "../models/course.model.js";
 import { Module } from "../models/modules.model.js";
 
+import { Comment } from '../models/comment.model.js';  // ✅ Import Comment here
 
 
 export const createModule = async (req, res) => {
@@ -55,7 +56,7 @@ export const getSingleCourseModule = async(req,res)=>{
         })
     }
 
-    const singleModule = await Module.findById(moduleId).populate('quizzes')
+    const singleModule = await Module.findById(moduleId)
 
     if(!singleModule){
         return res.status(401).json({
@@ -69,3 +70,30 @@ export const getSingleCourseModule = async(req,res)=>{
    }
 }
 
+
+
+export const getComment = async(req,res)=>{
+  try {
+    const moduleId = req.params.id
+
+    if(!moduleId){
+      return res.status(401).json({
+        message:"Module not found"
+      })
+    }
+
+
+    const moduleComment = await Module.findById(moduleId).populate({
+    path: 'comments',
+    populate: {  // ✅ Nested populate for userId
+      path: 'userId',
+      select: 'fullName email'  // ✅ Select only needed fields
+    },
+    options: { sort: { createdAt: -1 } }  // ✅ Latest comments first
+  });
+
+    return res.status(201).json(moduleComment.comments)
+  } catch (error) {
+    console.log(error)
+  }
+}

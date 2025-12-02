@@ -18,7 +18,14 @@ const userSchema = new mongoose.Schema({
     admin:{
         type:Boolean,
         default:false
-    }
+    },
+     purchasedCourses: [{ // ✅ Array with 's' - multiple courses
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course" // ✅ Direct course reference (better approach)
+    }]
+
+
+
 },{timestamps:true})
 
 

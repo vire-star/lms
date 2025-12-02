@@ -14,12 +14,21 @@ const moduleSchema = new mongoose.Schema({
         required:true
     },
 
-    quizzes:[
+    quiz:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Quiz"
+    },
+
+
+    comments:[
         { 
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Quiz"
+            ref: "Comment"
          }
-    ]
+
+    ],
+
+    
 }, {timestamps:true})
 
 

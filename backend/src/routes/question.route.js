@@ -5,7 +5,7 @@ import { createQuestion, getQuestion } from "../controllers/question.controller.
 
 const questionRoute = express.Router()
 
-questionRoute.get('/getQuestion', protectRoute, getQuestion)
+questionRoute.get('/getQuestion/:id', protectRoute, getQuestion)
 questionRoute.post('/createQuestion', protectRoute, createQuestion)
 
 export default questionRoute
