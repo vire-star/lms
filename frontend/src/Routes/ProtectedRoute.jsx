@@ -1,0 +1,45 @@
+import { useGetUser } from "@/hooks/User/user.hook";
+import { useUserStore } from "@/Store/user.store";
+
+import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
+export const ProtectRoute = ({ children }) => {
+  const setUser = useUserStore((state) => state.setUser);
+
+  const{data, isLoading, isError, error}=useGetUser()
+//   const { data, isLoading, isError, error } = useQuery({
+//     queryKey: ["getUser"],
+//     queryFn: getUserApi,
+//     retry: false,
+//   });
+
+  // Debug
+  // console.log("getUser data:", data, "error:", error);
+
+  useEffect(() => {
+    if (data?.user) {
+      // backend agar { user: {...} } bhej raha hai
+      setUser(data.user);
+    } else if (data) {
+      // agar direct user object bhej raha hai
+      setUser(data);
+    }
+  }, [data, setUser]);
+
+  // 1) Jab tak query loading hai → redirect mat karo
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // 2) Agar 401 / unauthorized error aaya → login pe bhej do
+  if (isError && error?.response?.status === 401) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // 3) Agar data hi nahi mila (aur error bhi nahi) → safe side pe login
+  if (!data) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
