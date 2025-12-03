@@ -22,6 +22,19 @@ export const RegisterApi = async(payload)=>{
 
     return res.data
 }
+export const updateProfileApi = async(payload)=>{
+    const res = await axios.put(`${import.meta.env.VITE_BASE_URL}/updateUser`,
+     payload,
+     {
+        headers: {
+                'Content-Type': 'multipart/form-data' // For file upload
+            },
+        withCredentials:true
+     }
+    )
+
+    return res.data
+}
 export const LogoutApi = async()=>{
     const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/logout`,
      {},

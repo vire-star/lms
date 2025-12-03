@@ -12,6 +12,7 @@ import YourCourse from '@/Pages/User/YourCourse'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { ProtectRoute } from './ProtectedRoute'
+import Profile from '@/Pages/User/Profile'
 
 const MainRoutes = () => {
   return (
@@ -27,6 +28,13 @@ const MainRoutes = () => {
           <ProtectRoute>
 
           <SingleCourse/> 
+          </ProtectRoute>
+          
+          }/>
+        <Route path='/profile' element={
+          <ProtectRoute>
+
+          <Profile/> 
           </ProtectRoute>
           
           }/>

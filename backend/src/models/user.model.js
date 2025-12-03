@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    profilePhoto:{
+        type:String
+        
+    },
      purchasedCourses: [{ // ✅ Array with 's' - multiple courses
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course" // ✅ Direct course reference (better approach)

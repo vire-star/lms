@@ -1,5 +1,5 @@
-import { getUserApi, LoginApi, LogoutApi, RegisterApi } from "@/Api/User/user.api"
-import {  useMutation, useQuery } from "@tanstack/react-query"
+import { getUserApi, LoginApi, LogoutApi, RegisterApi, updateProfileApi } from "@/Api/User/user.api"
+import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
@@ -70,5 +70,20 @@ export const useGetUser = ()=>{
         queryFn:getUserApi,
         queryKey:(['getUser']),
         retry:false
+    })
+}
+
+
+export const useUpdateForm =()=>{
+    const queryClient  = useQueryClient()
+    return useMutation({
+        mutationFn:updateProfileApi,
+        onSuccess:(data)=>{
+            queryClient.invalidateQueries(['getUser'])
+            toast.success("profile updated successfully")
+        },
+        onError:(err)=>{
+            console.log(err)
+        }
     })
 }

@@ -2,6 +2,7 @@ import { ENV } from "../helpers/env.js";
 import { User } from "../models/user.model.js";
 import jwt from 'jsonwebtoken'
 import bcrypt from "bcryptjs";
+import cloudinary from "../helpers/cloudinary.js";
 export const register =async(req ,res)=>{
     try {
         const {fullName, email, password}=req.body;
@@ -136,5 +137,56 @@ export const getUser = async(req,res)=>{
         return res.status(201).json(user)
     } catch (error) {
         console.log(`error from getUser backend, ${error}`)
+    }
+}
+
+
+export const updateProfile = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { fullName } = req.body;
+        
+        const updateData = {};
+        
+        if (fullName) {
+            updateData.fullName = fullName;
+        }
+        
+        // Safe file check
+        if (req.file) {
+            const base64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+            
+            const uploadRes = await cloudinary.uploader.upload(base64, {
+                folder: "profilePhoto",
+            });
+            
+            updateData.profilePhoto = uploadRes.secure_url;
+        }
+        
+        const user = await User.findByIdAndUpdate(
+            userId,
+            updateData,
+            { new: true, runValidators: true }
+        ).select('-password');
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        
+        return res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            user
+        });
+        
+    } catch (error) {
+        console.error('Update Profile Error:', error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
