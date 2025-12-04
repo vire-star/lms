@@ -220,87 +220,13 @@ const Profile = () => {
                     </Card>
 
                     {/* Completed Courses */}
-                    <Card className="hover:shadow-lg transition-shadow duration-300 border-t-4 border-t-green-500">
-                        <CardHeader className="pb-3">
-                            <div className="flex items-center justify-between">
-                                <CardTitle className="text-sm font-medium text-gray-600">
-                                    Completed
-                                </CardTitle>
-                                <Award className="h-5 w-5 text-green-500" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-bold text-gray-900">
-                                {user?.completedCourses || 0}
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                Courses finished
-                            </p>
-                        </CardContent>
-                    </Card>
+                   
 
                     {/* Learning Hours */}
-                    <Card className="hover:shadow-lg transition-shadow duration-300 border-t-4 border-t-purple-500">
-                        <CardHeader className="pb-3">
-                            <div className="flex items-center justify-between">
-                                <CardTitle className="text-sm font-medium text-gray-600">
-                                    Learning Time
-                                </CardTitle>
-                                <Clock className="h-5 w-5 text-purple-500" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-bold text-gray-900">
-                                {user?.learningHours || 0}h
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                Total hours invested
-                            </p>
-                        </CardContent>
-                    </Card>
+                    
                 </div>
 
-                {/* Purchased Courses Section */}
-                {user?.purchasedCourses && user.purchasedCourses.length > 0 && (
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <BookOpen className="h-5 w-5 text-blue-600" />
-                                My Courses
-                            </CardTitle>
-                            <CardDescription>
-                                Continue your learning journey
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-3">
-                                {user.purchasedCourses.slice(0, 3).map((course, index) => (
-                                    <div 
-                                        key={index} 
-                                        className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
-                                                {index + 1}
-                                            </div>
-                                            <div>
-                                                <p className="font-medium text-gray-900">
-                                                    {course.title || `Course ${index + 1}`}
-                                                </p>
-                                                <p className="text-sm text-gray-500">
-                                                    {course.progress || 0}% completed
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <Button variant="ghost" size="sm">
-                                            Continue
-                                        </Button>
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+                
             </div>
         </div>
     )
