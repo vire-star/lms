@@ -2,14 +2,20 @@ import { useForm } from "react-hook-form"
 import { useState } from 'react'
 import { useUserStore } from "@/Store/user.store";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useUpdateForm } from "@/hooks/User/user.hook";
-import { Camera, Mail, BookOpen, User as UserIcon } from "lucide-react";
+import { Camera, Mail, BookOpen, User as UserIcon, Award, Clock, CheckCircle2 } from "lucide-react";
 
 const Profile = () => {
     const { user } = useUserStore();
     const { register, handleSubmit, reset } = useForm();
     const [preview, setPreview] = useState(null);
-    const [open, setOpen] = useState(false); // Dialog state control
+    const [open, setOpen] = useState(false);
 
     const { mutate, isPending } = useUpdateForm();
 
@@ -26,9 +32,9 @@ const Profile = () => {
         
         mutate(formData, {
             onSuccess: () => {
-                setOpen(false); // Close dialog on success
-                setPreview(null); // Reset preview
-                reset(); // Reset form
+                setOpen(false);
+                setPreview(null);
+                reset();
             }
         });
     }
@@ -40,142 +46,261 @@ const Profile = () => {
         }
     }
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto">
-                {/* Profile Card */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                    {/* Header Background */}
-                    <div className="h-32 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-                    
-                    {/* Profile Content */}
-                    <div className="relative px-6 pb-6">
-                        {/* Profile Image */}
-                        <div className="flex flex-col items-center -mt-16">
-                            <div className="relative">
-                                <img 
-                                    className="h-32 w-32 rounded-full border-4 border-white shadow-lg object-cover bg-gray-100"
-                                    src={user?.profilePhoto || "https://via.placeholder.com/150"} 
-                                    alt="Profile" 
-                                />
-                                <div className="absolute bottom-2 right-2 bg-blue-500 rounded-full p-2 shadow-lg">
-                                    <Camera className="h-4 w-4 text-white" />
-                                </div>
-                            </div>
-                            
-                            {/* User Info */}
-                            <div className="mt-4 text-center">
-                                <h1 className="text-3xl font-bold text-gray-900">
-                                    {user?.fullName || "User Name"}
-                                </h1>
-                                <p className="text-gray-500 flex items-center justify-center gap-2 mt-2">
-                                    <Mail className="h-4 w-4" />
-                                    {user?.email || "user@example.com"}
-                                </p>
-                            </div>
+    // Get user initials for avatar fallback
+    const getInitials = (name) => {
+        return name
+            ?.split(' ')
+            .map(word => word[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2) || 'UN';
+    };
 
-                            {/* Edit Profile Button */}
-                            <Dialog open={open} onOpenChange={setOpen}>
-                                <DialogTrigger className="mt-4 px-6 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-5xl mx-auto space-y-6">
+                {/* Main Profile Card */}
+                <Card className="overflow-hidden shadow-xl">
+                    {/* Header with Gradient Background */}
+                    <div className="relative h-48 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+                        <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
+                        
+                        {/* Edit Button on Header */}
+                        <Dialog open={open} onOpenChange={setOpen}>
+                            <DialogTrigger asChild>
+                                <Button 
+                                    className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white border border-white/30"
+                                    size="sm"
+                                >
+                                    <Camera className="h-4 w-4 mr-2" />
                                     Edit Profile
-                                </DialogTrigger>
-                                
-                                <DialogContent className="sm:max-w-[500px]">
-                                    <DialogHeader>
-                                        <DialogTitle className="text-2xl font-bold text-gray-900">
-                                            Update Profile
-                                        </DialogTitle>
-                                        <DialogDescription className="text-gray-600">
-                                            Make changes to your profile information
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    
-                                    <form onSubmit={handleSubmit(updateFormHandler)} className="space-y-6 mt-4">
-                                        {/* Full Name Input */}
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                                <UserIcon className="h-4 w-4" />
-                                                Full Name
-                                            </label>
-                                            <input 
-                                                type="text" 
-                                                placeholder="Enter your name"
-                                                defaultValue={user?.fullName}
-                                                {...register("fullName")}
-                                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                                            />
-                                        </div>
-                                        
-                                        {/* Profile Photo Input */}
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                                <Camera className="h-4 w-4" />
-                                                Profile Photo
-                                            </label>
-                                            <input 
-                                                type="file" 
-                                                accept="image/*"
-                                                {...register("profilePhoto")}
-                                                onChange={handleFileChange}
-                                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-                                            />
-                                        </div>
-                                        
-                                        {/* Preview Image */}
-                                        {preview && (
-                                            <div className="flex justify-center">
-                                                <div className="relative">
-                                                    <img 
-                                                        src={preview} 
-                                                        alt="Preview" 
-                                                        className="h-24 w-24 rounded-full object-cover border-4 border-blue-100 shadow-md" 
-                                                    />
-                                                    <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 rounded-full transition-all duration-200 flex items-center justify-center">
-                                                        <span className="text-white text-xs font-medium opacity-0 hover:opacity-100">Preview</span>
-                                                    </div>
+                                </Button>
+                            </DialogTrigger>
+
+                            <DialogContent className="sm:max-w-[500px]">
+                                <DialogHeader>
+                                    <DialogTitle className="text-2xl font-bold">Update Profile</DialogTitle>
+                                    <DialogDescription>
+                                        Make changes to your profile information and photo
+                                    </DialogDescription>
+                                </DialogHeader>
+
+                                <form onSubmit={handleSubmit(updateFormHandler)} className="space-y-5 mt-4">
+                                    {/* Full Name Input */}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="fullName" className="flex items-center gap-2">
+                                            <UserIcon className="h-4 w-4 text-muted-foreground" />
+                                            Full Name
+                                        </Label>
+                                        <Input
+                                            id="fullName"
+                                            type="text"
+                                            placeholder="Enter your full name"
+                                            defaultValue={user?.fullName}
+                                            {...register("fullName")}
+                                            className="h-11"
+                                        />
+                                    </div>
+
+                                    {/* Profile Photo Input */}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="profilePhoto" className="flex items-center gap-2">
+                                            <Camera className="h-4 w-4 text-muted-foreground" />
+                                            Profile Photo
+                                        </Label>
+                                        <Input
+                                            id="profilePhoto"
+                                            type="file"
+                                            accept="image/*"
+                                            {...register("profilePhoto")}
+                                            onChange={handleFileChange}
+                                            className="h-11 cursor-pointer"
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            Recommended: Square image, max 5MB
+                                        </p>
+                                    </div>
+
+                                    {/* Image Preview */}
+                                    {preview && (
+                                        <div className="flex justify-center py-2">
+                                            <div className="relative group">
+                                                <Avatar className="h-24 w-24 border-4 border-blue-100 shadow-lg">
+                                                    <AvatarImage src={preview} className="object-cover" />
+                                                </Avatar>
+                                                <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <span className="text-white text-xs font-medium">Preview</span>
                                                 </div>
                                             </div>
-                                        )}
-                                        
-                                        {/* Submit Button */}
-                                        <button 
-                                            type="submit"
+                                        </div>
+                                    )}
+
+                                    {/* Action Buttons */}
+                                    <div className="flex justify-end gap-3 pt-4">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => {
+                                                setOpen(false);
+                                                setPreview(null);
+                                                reset();
+                                            }}
                                             disabled={isPending}
-                                            className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                         >
+                                            Cancel
+                                        </Button>
+                                        <Button type="submit" disabled={isPending}>
                                             {isPending ? (
-                                                <span className="flex items-center justify-center gap-2">
-                                                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                                        ircle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                                <>
+                                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                                     </svg>
                                                     Updating...
-                                                </span>
-                                            ) : "Update Profile"}
-                                        </button>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-
-                        {/* Stats Section */}
-                        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Purchased Courses */}
-                            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center transform hover:scale-105 transition-all duration-200 shadow-md">
-                                <BookOpen className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                                <p className="text-3xl font-bold text-blue-600">
-                                    {user?.purchasedCourses?.length || 0}
-                                </p>
-                                <p className="text-sm text-gray-600 mt-1">Courses Enrolled</p>
-                            </div>
-
-                            {/* Additional Stats - You can customize */}
-                           
-
-                           
-                        </div>
+                                                </>
+                                            ) : "Save Changes"}
+                                        </Button>
+                                    </div>
+                                </form>
+                            </DialogContent>
+                        </Dialog>
                     </div>
+
+                    <CardContent className="relative px-6 pb-8">
+                        {/* Avatar Section */}
+                        <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6 -mt-20">
+                            <Avatar className="h-40 w-40 border-4 border-white shadow-2xl ring-4 ring-blue-50">
+                                <AvatarImage 
+                                    src={user?.profilePhoto} 
+                                    alt={user?.fullName}
+                                    className="object-cover"
+                                />
+                                <AvatarFallback className="text-4xl font-bold bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
+                                    {getInitials(user?.fullName)}
+                                </AvatarFallback>
+                            </Avatar>
+
+                            <div className="flex-1 text-center sm:text-left sm:mb-4">
+                                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                                    {user?.fullName || "User Name"}
+                                </h1>
+                                <p className="text-gray-600 flex items-center justify-center sm:justify-start gap-2 mb-3">
+                                    <Mail className="h-4 w-4" />
+                                    {user?.email || "user@example.com"}
+                                </p>
+                                <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100">
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                                    Active Learner
+                                </Badge>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Enrolled Courses */}
+                    <Card className="hover:shadow-lg transition-shadow duration-300 border-t-4 border-t-blue-500">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="text-sm font-medium text-gray-600">
+                                    Enrolled Courses
+                                </CardTitle>
+                                <BookOpen className="h-5 w-5 text-blue-500" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold text-gray-900">
+                                {user?.purchasedCourses?.length || 0}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Active learning courses
+                            </p>
+                        </CardContent>
+                    </Card>
+
+                    {/* Completed Courses */}
+                    <Card className="hover:shadow-lg transition-shadow duration-300 border-t-4 border-t-green-500">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="text-sm font-medium text-gray-600">
+                                    Completed
+                                </CardTitle>
+                                <Award className="h-5 w-5 text-green-500" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold text-gray-900">
+                                {user?.completedCourses || 0}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Courses finished
+                            </p>
+                        </CardContent>
+                    </Card>
+
+                    {/* Learning Hours */}
+                    <Card className="hover:shadow-lg transition-shadow duration-300 border-t-4 border-t-purple-500">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="text-sm font-medium text-gray-600">
+                                    Learning Time
+                                </CardTitle>
+                                <Clock className="h-5 w-5 text-purple-500" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold text-gray-900">
+                                {user?.learningHours || 0}h
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Total hours invested
+                            </p>
+                        </CardContent>
+                    </Card>
                 </div>
+
+                {/* Purchased Courses Section */}
+                {user?.purchasedCourses && user.purchasedCourses.length > 0 && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <BookOpen className="h-5 w-5 text-blue-600" />
+                                My Courses
+                            </CardTitle>
+                            <CardDescription>
+                                Continue your learning journey
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-3">
+                                {user.purchasedCourses.slice(0, 3).map((course, index) => (
+                                    <div 
+                                        key={index} 
+                                        className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
+                                                {index + 1}
+                                            </div>
+                                            <div>
+                                                <p className="font-medium text-gray-900">
+                                                    {course.title || `Course ${index + 1}`}
+                                                </p>
+                                                <p className="text-sm text-gray-500">
+                                                    {course.progress || 0}% completed
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <Button variant="ghost" size="sm">
+                                            Continue
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
             </div>
         </div>
     )
